@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,9 +28,15 @@ namespace CourseApp
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseDeveloperExceptionPage();
-            app.UseStatusCodePages();
-            app.UseStaticFiles();
+            app.UseDeveloperExceptionPage(); //Bir hata olduğunda hata kodlarını içinde görmemizi sağlar.
+            app.UseStatusCodePages(); //404 hatası server hatası olduğunda göstersin istiyoruz
+            app.UseStaticFiles(); //wwwrootun içindeki varsayılan dosyaları ulaşabilir yapıyoruz.
+            app.UseSpaStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"node_modules")),
+                RequestPath = new PathString("/vendor")
+
+            });
             app.UseMvcWithDefaultRoute();
 
 
